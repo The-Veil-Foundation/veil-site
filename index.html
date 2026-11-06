@@ -398,15 +398,15 @@
         <p class="lead" data-en>Download the APK on your phone or TV, open it and allow the install.</p>
         <p class="lead" data-ru>Скачайте APK на телефон или телевизор, откройте его и разрешите установку.</p>
         <div class="actions">
-          <a class="btn" href="https://github.com/The-Veil-Foundation/veil-android/releases/download/v0.2.0-alpha/veil-0.2.0-alpha-arm64-v8a.apk" data-en>Download for Android</a>
-          <a class="btn" href="https://github.com/The-Veil-Foundation/veil-android/releases/download/v0.2.0-alpha/veil-0.2.0-alpha-arm64-v8a.apk" data-ru>Скачать для Android</a>
+          <a class="btn" data-apk href="https://github.com/The-Veil-Foundation/veil-android/releases/download/v0.2.0-alpha/veil-0.2.0-alpha-arm64-v8a.apk" data-en>Download for Android</a>
+          <a class="btn" data-apk href="https://github.com/The-Veil-Foundation/veil-android/releases/download/v0.2.0-alpha/veil-0.2.0-alpha-arm64-v8a.apk" data-ru>Скачать для Android</a>
           <a class="lnk" href="https://github.com/The-Veil-Foundation/veil-android/releases/latest" data-en>Other builds</a>
           <a class="lnk" href="https://github.com/The-Veil-Foundation/veil-android/releases/latest" data-ru>Другие сборки</a>
         </div>
         <dl class="specs">
           <div><dt data-en>System</dt><dt data-ru>Система</dt><dd data-en>Android 7.0 or later</dd><dd data-ru>Android 7.0 и новее</dd></div>
           <div><dt data-en>Devices</dt><dt data-ru>Устройства</dt><dd data-en>Phones, tablets, Android TV</dd><dd data-ru>Телефоны, планшеты, Android TV</dd></div>
-          <div><dt data-en>Version</dt><dt data-ru>Версия</dt><dd>0.2.0-alpha</dd></div>
+          <div><dt data-en>Version</dt><dt data-ru>Версия</dt><dd id="apk-ver">0.2.0-alpha</dd></div>
           <div><dt data-en>Code</dt><dt data-ru>Код</dt><dd data-en>Open, AGPLv3</dd><dd data-ru>Открытый, AGPLv3</dd></div>
         </dl>
         <p class="note" data-en>The button gets the build for almost every phone (arm64). For an x86_64 device or emulator, take the other APK from the release page. Veil isn't from Google Play, so Android asks once to allow installs from your browser.</p>
@@ -534,6 +534,33 @@
     var w = document.querySelector('.word').clientWidth;
     if (w !== lastWidth) { lastWidth = w; fitWord(); }
   });
+
+  // The APK's file name carries its version, so there is no stable "latest" link to it.
+  // Ask GitHub for the newest release (prereleases included, as Android is in alpha) and
+  // point the buttons at its arm64 APK. If that fails, the links in the markup stay.
+  (function(){
+    var api = 'https://api.github.com/repos/The-Veil-Foundation/veil-android/releases?per_page=10';
+    function apply(r){
+      document.querySelectorAll('a[data-apk]').forEach(function(a){ a.href = r.url; });
+      document.getElementById('apk-ver').textContent = r.ver;
+    }
+    try{ var c = JSON.parse(sessionStorage.getItem('veil-apk')); if (c && c.url) { apply(c); return; } }catch(e){}
+    if (!window.fetch) return;
+    fetch(api, {headers:{'Accept':'application/vnd.github+json'}})
+      .then(function(res){ return res.ok ? res.json() : []; })
+      .then(function(list){
+        for (var i = 0; i < list.length; i++) {
+          if (list[i].draft) continue;
+          var apk = (list[i].assets || []).filter(function(x){ return /arm64-v8a\.apk$/.test(x.name); })[0];
+          if (!apk) continue;
+          var r = {url: apk.browser_download_url, ver: list[i].tag_name.replace(/^v/, '')};
+          apply(r);
+          try{ sessionStorage.setItem('veil-apk', JSON.stringify(r)); }catch(e){}
+          return;
+        }
+      })
+      .catch(function(){});
+  })();
 
   var saved = 'en';
   try{ saved = localStorage.getItem('veil-lang') || (navigator.language||'').slice(0,2); }catch(e){}
