@@ -142,7 +142,7 @@
   .specs dt{color:var(--dim);font-size:13px;margin-bottom:4px}
   .specs dd{font-size:15px}
   .note{color:var(--faint);font-size:14px;max-width:60ch}
-  .plat{display:grid;gap:28px}
+  .plat{display:grid;gap:28px;scroll-margin-top:84px}
   .plat + .plat{border-top:1px solid var(--line);padding-top:48px}
   .plat-h{font-weight:800;font-stretch:125%;font-size:clamp(28px,3vw,40px);line-height:1;letter-spacing:-.03em;display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px}
   .badge{font-weight:600;font-stretch:100%;font-size:12px;letter-spacing:.02em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line2);border-radius:999px;padding:4px 10px}
@@ -215,8 +215,8 @@
         <div class="actions">
           <a class="btn" href="https://github.com/faustyu1/veil/releases/latest/download/Veil.app.zip" data-en>Download for Mac</a>
           <a class="btn" href="https://github.com/faustyu1/veil/releases/latest/download/Veil.app.zip" data-ru>Скачать для Mac</a>
-          <a class="lnk" href="#download" data-en>Android</a>
-          <a class="lnk" href="#download" data-ru>Android</a>
+          <a class="lnk" href="#android" data-en>Android</a>
+          <a class="lnk" href="#android" data-ru>Android</a>
           <a class="lnk" href="https://github.com/The-Veil-Foundation">GitHub</a>
         </div>
         <p class="meta" data-en>Free and open source. macOS 14 or later, Android 7.0 or later. Windows and Linux soon.</p>
@@ -393,7 +393,7 @@
         <p class="note" data-ru>Veil не из App Store, поэтому в первый раз macOS может его не открыть. Нажмите на Veil правой кнопкой и выберите «Открыть» или разрешите запуск в «Системные настройки», «Конфиденциальность и безопасность».</p>
       </div>
 
-      <div class="plat">
+      <div class="plat" id="android">
         <h3 class="plat-h">Android <span class="badge" data-en>Alpha</span><span class="badge" data-ru>Альфа</span></h3>
         <p class="lead" data-en>Download the APK on your phone or TV, open it and allow the install.</p>
         <p class="lead" data-ru>Скачайте APK на телефон или телевизор, откройте его и разрешите установку.</p>
